@@ -70,3 +70,28 @@ poetry run <command>
 ```
 
 Production and development dependencies are maintained separately in pyproject.toml, while poetry.lock ensures reproducible installations.
+
+## Code Quality
+
+The project uses Ruff for linting and formatting and Pytest for automated tests.
+
+Run linting with:
+
+```bash
+poetry run ruff check .
+```
+
+Check formatting with:
+
+```bash
+poetry run ruff format --check .
+```
+
+Run tests with:
+
+```bash
+poetry run pytest
+```
+
+Application logging is configured through configs/logging.yaml, with the log level controlled by the LOG_LEVEL environment variable.
+
