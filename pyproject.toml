@@ -1,0 +1,26 @@
+[project]
+name = "ecommerce-purchase-propensity"
+version = "0.1.0"
+description = "Reproducible machine learning pipeline for predicting e-commerce purchase propensity."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = ["numpy (>=2.5.4,<3.0.0)", "pandas (>=3.1.0,<4.0.0)", "scikit-learn (>=1.9.1,<2.0.0)", "mlflow (>=3.17.2,<4.0.0)", "dvc (>=3.67.1,<4.0.0)", "python-dotenv (>=1.2.4,<2.0.0)", "pyyaml (>=6.0.3,<7.0.0)"]
+
+[tool.poetry]
+packages = [
+    { include = "ecommerce_purchase_propensity", from = "src" }
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.2.0,<10.0.0)",
+    "ruff (>=0.17.3,<0.18.0)",
+    "jupyter (>=1.1.1,<2.0.0)",
+    "ipykernel (>=7.4.0,<8.0.0)",
+    "matplotlib (>=3.11.2,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)"
+]

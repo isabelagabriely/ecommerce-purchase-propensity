@@ -51,3 +51,22 @@ ecommerce-purchase-propensity/
 ├── .env.example
 ├── .gitignore
 └── README.md
+```
+
+## Development Environment
+
+The project uses Python 3.13 and Poetry for dependency management.
+
+Install all project and development dependencies with:
+
+```bash
+poetry install
+```
+
+Run commands inside the managed environment with:
+
+```bash
+poetry run <command>
+```
+
+Production and development dependencies are maintained separately in pyproject.toml, while poetry.lock ensures reproducible installations.
