@@ -7,3 +7,18 @@ stages:
     - src/ecommerce_purchase_propensity/logging_config.py
     outs:
     - data/raw/online_shoppers_intention.csv
+  preprocess:
+    cmd: poetry run python -m ecommerce_purchase_propensity.data.preprocess
+    deps:
+    - configs/logging.yaml
+    - data/raw/online_shoppers_intention.csv
+    - src/ecommerce_purchase_propensity/config.py
+    - src/ecommerce_purchase_propensity/data/preprocess.py
+    - src/ecommerce_purchase_propensity/data/schema.py
+    - src/ecommerce_purchase_propensity/logging_config.py
+    params:
+    - data.random_state
+    - data.test_size
+    outs:
+    - data/processed/test.csv
+    - data/processed/train.csv

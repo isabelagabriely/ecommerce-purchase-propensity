@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from ecommerce_purchase_propensity.data.schema import EXPECTED_COLUMNS
 from ecommerce_purchase_propensity.logging_config import setup_logging
 
 LOGGER = logging.getLogger(__name__)
@@ -29,27 +30,6 @@ ARCHIVE_MEMBER = "online_shoppers_intention.csv"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "raw" / "online_shoppers_intention.csv"
 
 EXPECTED_ROWS = 12_330
-
-EXPECTED_COLUMNS = [
-    "Administrative",
-    "Administrative_Duration",
-    "Informational",
-    "Informational_Duration",
-    "ProductRelated",
-    "ProductRelated_Duration",
-    "BounceRates",
-    "ExitRates",
-    "PageValues",
-    "SpecialDay",
-    "Month",
-    "OperatingSystems",
-    "Browser",
-    "Region",
-    "TrafficType",
-    "VisitorType",
-    "Weekend",
-    "Revenue",
-]
 
 
 def validate_dataset(dataset_path: Path) -> None:

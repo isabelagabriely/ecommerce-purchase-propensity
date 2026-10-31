@@ -161,3 +161,46 @@ pipeline definition and lock metadata through `dvc.yaml` and `dvc.lock`.
 
 As additional stages are implemented, the pipeline will be extended
 with preprocessing, training, evaluation, and model registration.
+
+## Data Preprocessing
+
+The raw dataset is validated and split into reproducible training and
+test datasets.
+
+The preprocessing stage performs:
+
+- schema validation;
+- binary target normalization;
+- stratified train/test splitting;
+- fixed random seed for reproducibility.
+
+Pipeline parameters are stored in `params.yaml`.
+
+Current configuration:
+
+```yaml
+data:
+  test_size: 0.20
+  random_state: 42
+```
+
+Run the complete data pipeline with:
+
+```bash
+poetry run dvc repro
+```
+
+The current DVC pipeline is:
+
+```text
+download
+   ↓
+preprocess
+   ├── data/processed/train.csv
+   └── data/processed/test.csv
+```
+
+Feature scaling and categorical encoding are intentionally not applied
+before the train/test split. These transformations will be fitted only
+on training data inside the Scikit-Learn modeling pipeline to prevent
+data leakage.

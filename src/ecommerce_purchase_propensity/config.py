@@ -1,0 +1,22 @@
+"""Project configuration utilities."""
+
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_PARAMS_PATH = PROJECT_ROOT / "params.yaml"
+
+
+def load_params(
+    params_path: Path = DEFAULT_PARAMS_PATH,
+) -> dict[str, Any]:
+    """Load project parameters from YAML."""
+    with params_path.open(encoding="utf-8") as file:
+        params = yaml.safe_load(file)
+
+    if not isinstance(params, dict):
+        raise ValueError("Project parameters must be a YAML mapping.")
+
+    return params

@@ -9,8 +9,8 @@ stages:
       size: 322
     - path: src/ecommerce_purchase_propensity/data/download.py
       hash: md5
-      md5: 3328116ea1bec5ea1b6ae0b7a6a85292
-      size: 4395
+      md5: 5f381298ab4d248486ee159d98b4bb62
+      size: 4059
     - path: src/ecommerce_purchase_propensity/logging_config.py
       hash: md5
       md5: 2fdabb38f1cde8ae82673cd532f49f99
@@ -20,3 +20,43 @@ stages:
       hash: md5
       md5: cc6ec1db03b4f10f8de52c56ff48b085
       size: 1072063
+  preprocess:
+    cmd: poetry run python -m ecommerce_purchase_propensity.data.preprocess
+    deps:
+    - path: configs/logging.yaml
+      hash: md5
+      md5: 40988c7c1ce61a6e040d1d9417382747
+      size: 322
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063
+    - path: src/ecommerce_purchase_propensity/config.py
+      hash: md5
+      md5: ad4c0785a240c3cbc52f270d382148dd
+      size: 575
+    - path: src/ecommerce_purchase_propensity/data/preprocess.py
+      hash: md5
+      md5: 3255883c68fb42f28bbd77336fdc14f9
+      size: 4562
+    - path: src/ecommerce_purchase_propensity/data/schema.py
+      hash: md5
+      md5: 3dc62c67a87c05c4869d59d0df03aec9
+      size: 628
+    - path: src/ecommerce_purchase_propensity/logging_config.py
+      hash: md5
+      md5: 2fdabb38f1cde8ae82673cd532f49f99
+      size: 1094
+    params:
+      params.yaml:
+        data.random_state: 42
+        data.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 43e0a8c1e25be9230235596111d282b9
+      size: 224633
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 5270ec06938c745175f729b294d732e1
+      size: 897473
