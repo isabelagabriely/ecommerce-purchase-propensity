@@ -95,3 +95,33 @@ poetry run pytest
 
 Application logging is configured through configs/logging.yaml, with the log level controlled by the LOG_LEVEL environment variable.
 
+## Dataset
+
+This project uses the **Online Shoppers Purchasing Intention Dataset**
+from the UCI Machine Learning Repository.
+
+The dataset contains 12,330 browsing sessions and 18 attributes.
+The binary target variable is `Revenue`, which indicates whether the
+session resulted in a purchase.
+
+The raw dataset can be downloaded automatically with:
+
+```bash
+poetry run python -m ecommerce_purchase_propensity.data.download
+```
+
+To force a new download:
+
+```bash
+poetry run python -m ecommerce_purchase_propensity.data.download --force
+```
+
+The download command validates the expected dataset schema and number
+of records before the data is used by the pipeline.
+
+#### Dataset attribution
+Sakar, C. & Kastro, Y. (2018).
+Online Shoppers Purchasing Intention Dataset.
+UCI Machine Learning Repository.
+
+DOI: 10.24432/C5F88Q
