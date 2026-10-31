@@ -125,3 +125,39 @@ Online Shoppers Purchasing Intention Dataset.
 UCI Machine Learning Repository.
 
 DOI: 10.24432/C5F88Q
+
+## DVC Pipeline
+
+The project uses DVC for data versioning and pipeline reproducibility.
+
+Initialize dependencies and reproduce the current pipeline with:
+
+```bash
+poetry run dvc repro
+```
+
+The current pipeline starts with automated dataset ingestion:
+
+```text
+download
+   ↓
+data/raw/online_shoppers_intention.csv
+```
+
+Inspect the pipeline graph with:
+
+```bash
+poetry run dvc dag
+```
+
+Check whether pipeline dependencies or outputs have changed with:
+
+```bash
+poetry run dvc status
+```
+
+DVC stores generated data in its local cache while Git tracks the
+pipeline definition and lock metadata through `dvc.yaml` and `dvc.lock`.
+
+As additional stages are implemented, the pipeline will be extended
+with preprocessing, training, evaluation, and model registration.

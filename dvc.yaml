@@ -1,0 +1,9 @@
+stages:
+  download:
+    cmd: poetry run python -m ecommerce_purchase_propensity.data.download
+    deps:
+    - configs/logging.yaml
+    - src/ecommerce_purchase_propensity/data/download.py
+    - src/ecommerce_purchase_propensity/logging_config.py
+    outs:
+    - data/raw/online_shoppers_intention.csv

@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: poetry run python -m ecommerce_purchase_propensity.data.download
+    deps:
+    - path: configs/logging.yaml
+      hash: md5
+      md5: 40988c7c1ce61a6e040d1d9417382747
+      size: 322
+    - path: src/ecommerce_purchase_propensity/data/download.py
+      hash: md5
+      md5: 3328116ea1bec5ea1b6ae0b7a6a85292
+      size: 4395
+    - path: src/ecommerce_purchase_propensity/logging_config.py
+      hash: md5
+      md5: 2fdabb38f1cde8ae82673cd532f49f99
+      size: 1094
+    outs:
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063
