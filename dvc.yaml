@@ -22,3 +22,31 @@ stages:
     outs:
     - data/processed/test.csv
     - data/processed/train.csv
+  train:
+    cmd: poetry run python -m ecommerce_purchase_propensity.modeling.train
+    deps:
+    - configs/logging.yaml
+    - data/processed/test.csv
+    - data/processed/train.csv
+    - src/ecommerce_purchase_propensity/config.py
+    - src/ecommerce_purchase_propensity/data/schema.py
+    - src/ecommerce_purchase_propensity/logging_config.py
+    - src/ecommerce_purchase_propensity/modeling/evaluate.py
+    - src/ecommerce_purchase_propensity/modeling/models.py
+    - src/ecommerce_purchase_propensity/modeling/train.py
+    params:
+    - data.random_state
+    - models.logistic_regression.max_iter
+    - models.logistic_regression.solver
+    - models.random_forest.max_depth
+    - models.random_forest.min_samples_split
+    - models.random_forest.n_estimators
+    - models.random_forest.n_jobs
+    - training.cv_folds
+    - training.selection_metric
+    outs:
+    - reports/model_comparison.csv:
+        cache: false
+    metrics:
+    - reports/test_metrics.json:
+        cache: false

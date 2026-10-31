@@ -204,3 +204,65 @@ Feature scaling and categorical encoding are intentionally not applied
 before the train/test split. These transformations will be fitted only
 on training data inside the Scikit-Learn modeling pipeline to prevent
 data leakage.
+
+## Model Training
+
+The project currently compares two classical Scikit-Learn classifiers:
+
+- Logistic Regression;
+- Random Forest.
+
+Both models use the same preprocessing architecture through a
+Scikit-Learn `Pipeline`.
+
+Numeric features are processed with median imputation and
+standardization. Categorical features use most-frequent imputation
+and one-hot encoding.
+
+```text
+features
+   ↓
+ColumnTransformer
+   ├── numeric
+   │     ├── median imputation
+   │     └── StandardScaler
+   │
+   └── categorical
+         ├── most-frequent imputation
+         └── OneHotEncoder
+                 ↓
+             classifier
+```
+
+Model selection uses 5-fold stratified cross-validation on the
+training dataset only.
+
+The primary selection metric is **Average Precision**, while ROC-AUC,
+F1, precision, recall, and accuracy are also tracked.
+
+The held-out test dataset is used only after the champion model has
+been selected.
+
+Run the complete pipeline with:
+
+```bash
+poetry run dvc repro
+```
+
+View final DVC metrics with:
+
+```bash
+poetry run dvc metrics show
+```
+
+Cross-validation results are stored in:
+
+```text
+reports/model_comparison.csv
+```
+
+Final held-out test metrics are stored in:
+
+```text
+reports/test_metrics.json
+```

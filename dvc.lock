@@ -60,3 +60,62 @@ stages:
       hash: md5
       md5: 5270ec06938c745175f729b294d732e1
       size: 897473
+  train:
+    cmd: poetry run python -m ecommerce_purchase_propensity.modeling.train
+    deps:
+    - path: configs/logging.yaml
+      hash: md5
+      md5: 40988c7c1ce61a6e040d1d9417382747
+      size: 322
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 43e0a8c1e25be9230235596111d282b9
+      size: 224633
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 5270ec06938c745175f729b294d732e1
+      size: 897473
+    - path: src/ecommerce_purchase_propensity/config.py
+      hash: md5
+      md5: ad4c0785a240c3cbc52f270d382148dd
+      size: 575
+    - path: src/ecommerce_purchase_propensity/data/schema.py
+      hash: md5
+      md5: 3dc62c67a87c05c4869d59d0df03aec9
+      size: 628
+    - path: src/ecommerce_purchase_propensity/logging_config.py
+      hash: md5
+      md5: 2fdabb38f1cde8ae82673cd532f49f99
+      size: 1094
+    - path: src/ecommerce_purchase_propensity/modeling/evaluate.py
+      hash: md5
+      md5: 28092ec2f870abb3b60a55c287343adf
+      size: 2898
+    - path: src/ecommerce_purchase_propensity/modeling/models.py
+      hash: md5
+      md5: 3d82d68a9e51abac1cbc143e42a17bb0
+      size: 2626
+    - path: src/ecommerce_purchase_propensity/modeling/train.py
+      hash: md5
+      md5: 09026be81b9383264b15aebe8dcb762a
+      size: 4828
+    params:
+      params.yaml:
+        data.random_state: 42
+        models.logistic_regression.max_iter: 1000
+        models.logistic_regression.solver: lbfgs
+        models.random_forest.max_depth:
+        models.random_forest.min_samples_split: 2
+        models.random_forest.n_estimators: 300
+        models.random_forest.n_jobs: -1
+        training.cv_folds: 5
+        training.selection_metric: average_precision
+    outs:
+    - path: reports/model_comparison.csv
+      hash: md5
+      md5: 5802d2e05aa9758420e029db5f67d38e
+      size: 721
+    - path: reports/test_metrics.json
+      hash: md5
+      md5: 8d552173e2f967854f33293c598c5125
+      size: 327
