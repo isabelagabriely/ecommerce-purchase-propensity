@@ -34,6 +34,7 @@ stages:
     - src/ecommerce_purchase_propensity/modeling/evaluate.py
     - src/ecommerce_purchase_propensity/modeling/models.py
     - src/ecommerce_purchase_propensity/modeling/train.py
+    - src/ecommerce_purchase_propensity/modeling/tracking.py
     params:
     - data.random_state
     - models.logistic_regression.max_iter

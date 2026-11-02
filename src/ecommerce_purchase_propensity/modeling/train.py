@@ -1,4 +1,4 @@
-"""Train and compare purchase propensity classifiers."""
+"""Train, track, and compare purchase propensity classifiers."""
 
 from __future__ import annotations
 
@@ -22,6 +22,11 @@ from ecommerce_purchase_propensity.modeling.evaluate import (
     select_champion,
 )
 from ecommerce_purchase_propensity.modeling.models import build_models
+from ecommerce_purchase_propensity.modeling.tracking import (
+    configure_mlflow,
+    log_candidate_run,
+    log_champion_evaluation,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -81,21 +86,24 @@ def save_test_metrics(
     LOGGER.info("Test metrics saved to %s", TEST_METRICS_PATH)
 
 
-def compare_models(
+def run_candidate_experiments(
     models: dict[str, Any],
     features: pd.DataFrame,
     target: pd.Series,
+    params: dict[str, Any],
     *,
     cv_folds: int,
     random_state: int,
-) -> list[dict[str, float | str]]:
-    """Compare candidate models using stratified cross-validation."""
+    selection_metric: str,
+) -> tuple[list[dict[str, float | str]], dict[str, str]]:
+    """Evaluate and track all candidate models."""
     cross_validator = build_cross_validator(
         n_splits=cv_folds,
         random_state=random_state,
     )
 
     results = []
+    run_ids = {}
 
     for model_name, model in models.items():
         LOGGER.info("Cross-validating model: %s", model_name)
@@ -108,19 +116,36 @@ def compare_models(
             cross_validator,
         )
 
-        results.append(result)
+        LOGGER.info("Fitting model on complete training dataset: %s", model_name)
+        model.fit(features, target)
 
-    return results
+        run_id = log_candidate_run(
+            model_name,
+            model,
+            features,
+            result,
+            params,
+            random_state=random_state,
+            cv_folds=cv_folds,
+            selection_metric=selection_metric,
+        )
+
+        results.append(result)
+        run_ids[model_name] = run_id
+
+    return results, run_ids
 
 
 def run_training(params: dict[str, Any]) -> None:
-    """Train, compare, select, and evaluate candidate models."""
+    """Train, compare, track, select, and evaluate candidate models."""
     data_params = params["data"]
     training_params = params["training"]
 
     random_state = int(data_params["random_state"])
     cv_folds = int(training_params["cv_folds"])
     selection_metric = str(training_params["selection_metric"])
+
+    configure_mlflow()
 
     train_data = load_dataset(TRAIN_DATA_PATH)
     test_data = load_dataset(TEST_DATA_PATH)
@@ -133,12 +158,14 @@ def run_training(params: dict[str, Any]) -> None:
         random_state=random_state,
     )
 
-    results = compare_models(
+    results, run_ids = run_candidate_experiments(
         models,
         train_features,
         train_target,
+        params,
         cv_folds=cv_folds,
         random_state=random_state,
+        selection_metric=selection_metric,
     )
 
     save_comparison(results)
@@ -151,7 +178,6 @@ def run_training(params: dict[str, Any]) -> None:
     LOGGER.info("Selected champion model: %s", champion_name)
 
     champion_model = models[champion_name]
-    champion_model.fit(train_features, train_target)
 
     test_metrics = evaluate_holdout(
         champion_model,
@@ -165,6 +191,13 @@ def run_training(params: dict[str, Any]) -> None:
         test_metrics,
     )
 
+    log_champion_evaluation(
+        run_ids[champion_name],
+        test_metrics,
+        COMPARISON_PATH,
+        TEST_METRICS_PATH,
+    )
+
     LOGGER.info(
         "Champion test average precision: %.4f",
         test_metrics["average_precision"],
@@ -172,8 +205,9 @@ def run_training(params: dict[str, Any]) -> None:
 
 
 def main() -> None:
-    """Run model training and evaluation."""
+    """Run model training and experiment tracking."""
     setup_logging()
+
     params = load_params()
     run_training(params)
 

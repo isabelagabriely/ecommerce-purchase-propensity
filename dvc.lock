@@ -97,8 +97,8 @@ stages:
       size: 2626
     - path: src/ecommerce_purchase_propensity/modeling/train.py
       hash: md5
-      md5: 09026be81b9383264b15aebe8dcb762a
-      size: 4828
+      md5: b9f95f07b2bebd2b65b2662ca941fb37
+      size: 5738
     params:
       params.yaml:
         data.random_state: 42

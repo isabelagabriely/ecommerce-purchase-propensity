@@ -266,3 +266,48 @@ Final held-out test metrics are stored in:
 ```text
 reports/test_metrics.json
 ```
+
+## MLflow Experiment Tracking
+
+Model experiments are tracked with MLflow.
+
+Start the local MLflow Tracking Server from the project root:
+
+```bash
+poetry run mlflow server \
+  --backend-store-uri sqlite:///mlflow.db \
+  --host 127.0.0.1 \
+  --port 5000
+```
+
+The MLflow UI is available at:
+
+```text
+http://127.0.0.1:5000
+```
+
+The training pipeline creates one MLflow run for each candidate model.
+
+Each run records:
+
+- model hyperparameters;
+- cross-validation configuration;
+- cross-validation metrics;
+- fitted Scikit-Learn pipeline;
+- model signature;
+- input example;
+- DVC lock metadata;
+- pipeline parameters.
+
+The model with the highest cross-validation Average Precision is tagged
+as the champion. Only the champion is evaluated on the held-out test set,
+and its final test metrics are added to the corresponding MLflow run.
+
+Run tracked training through DVC with:
+
+```bash
+poetry run dvc repro train
+```
+
+MLflow metadata is stored locally in `mlflow.db`, while model artifacts
+are stored under `mlartifacts/`. Both are excluded from Git.
