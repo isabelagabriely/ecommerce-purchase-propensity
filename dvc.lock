@@ -95,6 +95,10 @@ stages:
       hash: md5
       md5: 3d82d68a9e51abac1cbc143e42a17bb0
       size: 2626
+    - path: src/ecommerce_purchase_propensity/modeling/tracking.py
+      hash: md5
+      md5: d1dbbb89739fb80f6a3ae7191b502601
+      size: 5025
     - path: src/ecommerce_purchase_propensity/modeling/train.py
       hash: md5
       md5: b9f95f07b2bebd2b65b2662ca941fb37
@@ -119,3 +123,26 @@ stages:
       hash: md5
       md5: 8d552173e2f967854f33293c598c5125
       size: 327
+  register:
+    cmd: poetry run python -m ecommerce_purchase_propensity.modeling.registry
+    deps:
+    - path: configs/logging.yaml
+      hash: md5
+      md5: 40988c7c1ce61a6e040d1d9417382747
+      size: 322
+    - path: reports/test_metrics.json
+      hash: md5
+      md5: 8d552173e2f967854f33293c598c5125
+      size: 327
+    - path: src/ecommerce_purchase_propensity/logging_config.py
+      hash: md5
+      md5: 2fdabb38f1cde8ae82673cd532f49f99
+      size: 1094
+    - path: src/ecommerce_purchase_propensity/modeling/registry.py
+      hash: md5
+      md5: fbfc34cef20ec85050292ecbb8c7d3dd
+      size: 7865
+    - path: src/ecommerce_purchase_propensity/modeling/tracking.py
+      hash: md5
+      md5: d1dbbb89739fb80f6a3ae7191b502601
+      size: 5025

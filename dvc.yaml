@@ -51,3 +51,11 @@ stages:
     metrics:
     - reports/test_metrics.json:
         cache: false
+  register:
+    cmd: poetry run python -m ecommerce_purchase_propensity.modeling.registry
+    deps:
+    - configs/logging.yaml
+    - reports/test_metrics.json
+    - src/ecommerce_purchase_propensity/logging_config.py
+    - src/ecommerce_purchase_propensity/modeling/registry.py
+    - src/ecommerce_purchase_propensity/modeling/tracking.py

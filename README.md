@@ -311,3 +311,54 @@ poetry run dvc repro train
 
 MLflow metadata is stored locally in `mlflow.db`, while model artifacts
 are stored under `mlartifacts/`. Both are excluded from Git.
+
+## MLflow Model Registry
+
+After model comparison and held-out evaluation, the champion model is registered in the MLflow Model Registry.
+
+The registered model name and alias are configured through environment variables:
+
+```text
+MLFLOW_REGISTERED_MODEL_NAME=purchase-propensity-classifier
+MLFLOW_MODEL_ALIAS=champion
+```
+
+The current champion can be referenced independently of its numeric model version:
+
+```text
+models:/purchase-propensity-classifier@champion
+```
+
+The registration process locates the most recent champion MLflow run, registers its logged Scikit-Learn pipeline, attaches evaluation metadata to the model version, assigns the `champion` alias, and validates that the alias resolves to the registered version.
+
+After running a new training experiment, register the resulting champion with:
+
+```bash
+poetry run dvc repro --force --single-item register
+```
+
+The `--single-item` option prevents model registration from implicitly reproducing the training stage. The `--force` option is used because registration changes external MLflow Registry state that is not represented solely by DVC file outputs.
+
+The current DVC pipeline is:
+
+```text
+download
+   ↓
+preprocess
+   ↓
+train
+   ↓
+register
+```
+
+For a new modeling experiment, run:
+
+```bash
+poetry run dvc repro train
+```
+
+Then promote the resulting champion separately:
+
+```bash
+poetry run dvc repro --force --single-item register
+```
