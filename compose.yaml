@@ -1,0 +1,65 @@
+services:
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    command:
+      - poetry
+      - run
+      - mlflow
+      - server
+      - --backend-store-uri
+      - sqlite:////mlflow/mlflow.db
+      - --artifacts-destination
+      - /mlflow/artifacts
+      - --host
+      - 0.0.0.0
+      - --port
+      - "5000"
+      - --allowed-hosts
+      - localhost:5000,127.0.0.1:5000,mlflow:5000
+
+    ports:
+      - "5000:5000"
+
+    volumes:
+      - mlflow-data:/mlflow
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=2)",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      MLFLOW_EXPERIMENT_NAME: ecommerce-purchase-propensity
+      MLFLOW_REGISTERED_MODEL_NAME: purchase-propensity-classifier
+      MLFLOW_MODEL_ALIAS: champion
+      LOG_LEVEL: INFO
+
+    depends_on:
+      mlflow:
+        condition: service_healthy
+
+    command:
+      - poetry
+      - run
+      - dvc
+      - repro
+
+volumes:
+  mlflow-data:

@@ -362,3 +362,77 @@ Then promote the resulting champion separately:
 ```bash
 poetry run dvc repro --force --single-item register
 ```
+
+## Docker
+
+The complete Machine Learning pipeline can run in containers without relying on the host Python environment.
+
+Docker Compose defines two services:
+
+```text
+mlflow
+   └── MLflow Tracking Server and Model Registry
+
+pipeline
+   └── DVC pipeline execution
+       ├── download
+       ├── preprocess
+       ├── train
+       └── register
+```
+
+Build the Docker images with:
+
+```bash
+docker compose build
+```
+
+Start the MLflow Tracking Server:
+
+```bash
+docker compose up -d mlflow
+```
+
+The MLflow UI is available at:
+
+```text
+http://localhost:5000
+```
+
+Check the container status with:
+
+```bash
+docker compose ps
+```
+
+Run the complete Machine Learning pipeline inside Docker:
+
+```bash
+docker compose run --rm pipeline
+```
+
+The pipeline container connects to the MLflow service through the internal Docker network using:
+
+```text
+http://mlflow:5000
+```
+
+The Docker image runs DVC with SCM integration disabled because the `.git` directory is intentionally excluded from the image. Git and DVC integration remain enabled normally in the development environment.
+
+MLflow metadata, experiments, model artifacts, and Model Registry state are persisted in the `mlflow-data` Docker volume. This allows the MLflow state to survive container recreation.
+
+Stop the Docker environment with:
+
+```bash
+docker compose down
+```
+
+This preserves the MLflow volume.
+
+To completely reset the Docker environment, including MLflow experiments, registered models, and artifacts, run:
+
+```bash
+docker compose down -v
+```
+
+The `-v` option removes the persistent MLflow volume and should only be used when a complete reset is intended.

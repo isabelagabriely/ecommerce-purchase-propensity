@@ -2,6 +2,7 @@
 .github
 .venv
 .env
+poetry.toml
 
 __pycache__
 *.py[cod]
@@ -14,8 +15,17 @@ htmlcov
 
 .ipynb_checkpoints
 
+mlflow.db
 mlruns
 mlartifacts
+
+.dvc/cache
+
+data/raw/*.csv
+data/processed/*.csv
+
+reports/*.csv
+reports/*.json
 
 notebooks
 tests
